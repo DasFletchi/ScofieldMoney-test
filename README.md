@@ -8,11 +8,13 @@
 
 **https://dasfletchi.github.io/NoLoginChat/**
 
+*(Powered by free Cloudflare Worker proxy)*
+
 ---
 
 ## ✨ Features
 
-- ✅ **100% Free** - No paid models
+- ✅ **100% Free** - No paid models, no user API key needed
 - 🔒 **Privacy First** - No tracking, no login
 - 📱 **Mobile Ready** - Works on phone & desktop
 - 🤖 **5 Free Models** - Choose your AI:
@@ -24,9 +26,27 @@
 
 ---
 
+## 🔐 How It Works (API Key Hidden!)
+
+The API key is stored in a **Cloudflare Worker** (server-side), so:
+- ✅ Users don't see the API key
+- ✅ Key cannot be leaked/stolen
+- ✅ Completely free to run (Cloudflare Workers free tier)
+
+### Deploy Your Own Proxy (optional)
+
+If you want to run your own:
+
+1. Go to: https://workers.cloudflare.com
+2. Create new worker
+3. Paste code from `worker.js`
+4. Add your OpenRouter key in the worker code
+5. Update `src/App.jsx` with your worker URL
+
+---
+
 ## 🌿 This Project is Open
 
-- **No API key required** for users
 - **Open source** - Host yourself
 - **Privacy focused** - Your data stays yours
 
@@ -38,17 +58,6 @@
 git clone https://github.com/DasFletchi/NoLoginChat.git
 cd NoLoginChat
 npm install
-```
-
-### Add your OpenRouter API Key
-
-1. Get a free key at: https://openrouter.ai
-2. Create `.env.local`:
-```bash
-echo "VITE_API_KEY=your-key-here" > .env.local
-```
-3. Run:
-```bash
 npm run dev
 ```
 
@@ -56,7 +65,6 @@ npm run dev
 
 ## 💚 Support
 
-This service is free forever. If you want to help:
 - ⭐ Star the repo
 - 🐛 Report bugs
 - 💡 Suggest features

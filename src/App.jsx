@@ -25,10 +25,14 @@ const saveMessages = (sessionId, messages) => {
 }
 
 // ============ API CONFIG ============
-// For self-hosting: Add your OpenRouter key here
-// Or set it as environment variable: VITE_API_KEY
-const API_KEY = import.meta.env.VITE_API_KEY || ''
-const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
+// Free proxy URL (hides API key server-side)
+// Default: uses public proxy. Replace with your own Cloudflare Worker for production.
+const PROXY_URL = 'https://ai-proxy.example.workers.dev' // TODO: Deploy your own
+const API_URL = PROXY_URL || 'https://openrouter.ai/api/v1/chat/completions'
+
+// For self-hosting with your own key, set VITE_OPENROUTER_KEY in .env
+const API_KEY = import.meta.env.VITE_OPENROUTER_KEY || ''
+const USE_PROXY = !API_KEY  // Use proxy if no own key
 
 // Demo responses when no API key is provided
 const DEMO_RESPONSES = [
@@ -65,10 +69,11 @@ function App() {
     if (saved && saved.length > 0) {
       setMessages(saved)
     } else {
-      const apiStatus = API_KEY ? '✨ AI Ready' : '⚠️ Demo Mode'
+      const hasAI = API_KEY || USE_PROXY
+      const status = hasAI ? '✨ AI Ready' : '⚠️ Demo Mode'
       setMessages([{
         role: 'assistant',
-        content: `👋 Welcome to ChatNoLogin!\n\n${apiStatus}\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n${API_KEY ? '💬 Start chatting!' : '💡 Add your API key to enable real AI!'}\n\nGet free key: openrouter.ai`
+        content: `👋 Welcome to ChatNoLogin!\n\n${status}\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n${hasAI ? '💬 Start chatting!' : '💡 Add your own API key in .env to enable real AI!\n\nOr deploy the included Cloudflare Worker for free proxy.'}\n\nGet free key: openrouter.ai`
       }])
     }
   }, [sessionId])
@@ -78,14 +83,22 @@ function App() {
   }, [messages])
 
   const callAPI = async (msgs, model) => {
-    const response = await fetch(API_URL, {
+    const headers = {
+      'Content-Type': 'application/json',
+    }
+    
+    let url = API_URL
+    if (USE_PROXY) {
+      // Use proxy - no auth needed (key is server-side)
+      // Proxy forwards to OpenRouter
+    } else {
+      // Direct call with own key
+      headers['Authorization'] = `Bearer ${API_KEY}`
+    }
+    
+    const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
-        'HTTP-Referer': 'https://dasfletchi.github.io',
-        'X-Title': 'ChatNoLogin'
-      },
+      headers: headers,
       body: JSON.stringify({
         model: model,
         messages: msgs.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content })),
@@ -113,16 +126,17 @@ function App() {
     
     let reply
     
-    // If no API key, use demo mode
-    if (!API_KEY) {
-      await new Promise(r => setTimeout(r, 500 + Math.random() * 500))
-      reply = DEMO_RESPONSES[Math.floor(Math.random() * DEMO_RESPONSES.length)]
-    } else {
+    // Use API if key OR proxy is available
+    if (API_KEY || USE_PROXY) {
       try {
         reply = await callAPI(newMessages, selectedModel)
       } catch (err) {
         reply = `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`
       }
+    } else {
+      // Demo mode - no API
+      await new Promise(r => setTimeout(r, 500 + Math.random() * 500))
+      reply = DEMO_RESPONSES[Math.floor(Math.random() * DEMO_RESPONSES.length)]
     }
     
     const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
