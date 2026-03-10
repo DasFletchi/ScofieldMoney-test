@@ -1,39 +1,38 @@
-# 🤖 ChatNoLogin - Privacy First
+# 🤖 ChatNoLogin - 100% Free AI Chat
 
-**Free AI Chat - NO ADS, No Tracking, No Login**
-
-A minimal, privacy-focused AI chatbot. No ads, no tracking, no nonsense.
+**No login. No tracking. No ads. Completely free.**
 
 ---
 
-## 🚀 Live Demo
+## 🚀 Live
 
 **https://dasfletchi.github.io/NoLoginChat/**
-
-*(This branch = NO ads. For ad-supported version, see `ads-enabled` branch)*
 
 ---
 
 ## ✨ Features
 
-- **No Login** - Just open and start chatting
-- **No Ads** - Clean, distraction-free interface  
-- **Privacy First** - No tracking, no cookies, no data collection
-- **Session-Based** - Your chat lives in your URL (shareable)
-- **Mobile Ready** - Works great on phone & desktop
+- ✅ **100% Free** - No paid models
+- 🔒 **Privacy First** - No tracking, no login
+- 📱 **Mobile Ready** - Works on phone & desktop
+- 🤖 **5 Free Models** - Choose your AI:
+  - **Gemma 3 4B** - Fast & smart (Google)
+  - **Gemma 3 12B** - More power (Google)
+  - **Gemma 3n 4B** - Mobile optimized
+  - **Gemma 3n 2B** - Lightweight
+  - **Hermes 3 405B** - Most powerful
 
 ---
 
-## 🌿 Branches
+## 🌿 This Project is Open
 
-| Branch | Description |
-|--------|-------------|
-| `main` | Privacy First - No Ads ✅ |
-| `ads-enabled` | Ad-supported (helps fund the service) |
+- **No API key required** for users
+- **Open source** - Host yourself
+- **Privacy focused** - Your data stays yours
 
 ---
 
-## 🔧 Setup
+## 🔧 Self-Host
 
 ```bash
 git clone https://github.com/DasFletchi/NoLoginChat.git
@@ -44,25 +43,12 @@ npm run dev
 
 ---
 
-## 🤖 AI Configuration
+## 💚 Support
 
-Want real AI responses? Edit `src/App.jsx`:
-
-```javascript
-const USE_REAL_API = true
-const API_KEY = 'your-api-key-here'
-```
-
-### Free API Options:
-- OpenRouter (recommended)
-- Groq
-- Anthropic
-
----
-
-## 📄 License
-
-MIT - Do whatever you want!
+This service is free forever. If you want to help:
+- ⭐ Star the repo
+- 🐛 Report bugs
+- 💡 Suggest features
 
 ---
 
