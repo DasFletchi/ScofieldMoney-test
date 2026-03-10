@@ -38,6 +38,17 @@
 git clone https://github.com/DasFletchi/NoLoginChat.git
 cd NoLoginChat
 npm install
+```
+
+### Add your OpenRouter API Key
+
+1. Get a free key at: https://openrouter.ai
+2. Create `.env.local`:
+```bash
+echo "VITE_API_KEY=your-key-here" > .env.local
+```
+3. Run:
+```bash
 npm run dev
 ```
 

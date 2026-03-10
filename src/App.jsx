@@ -25,7 +25,9 @@ const saveMessages = (sessionId, messages) => {
 }
 
 // ============ API CONFIG ============
-const API_KEY = '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'
+// For self-hosting: Add your OpenRouter key here
+// Or set it as environment variable: VITE_API_KEY
+const API_KEY = import.meta.env.VITE_API_KEY || ''
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 // FREE MODELS ONLY - No paid models!
