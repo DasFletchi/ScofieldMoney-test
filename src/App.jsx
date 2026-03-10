@@ -25,18 +25,63 @@ const saveMessages = (sessionId, messages) => {
 }
 
 // ============ API CONFIG ============
-// For self-hosting: Add your OpenRouter key here
-// Or set it as environment variable: VITE_API_KEY
-const API_KEY = import.meta.env.VITE_API_KEY || ''
+const API_KEY = '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'
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-// FREE MODELS ONLY - No paid models!
+// ALL FREE MODELS from OpenRouter
 const FREE_MODELS = [
-  { id: 'google/gemma-3-4b-it', name: 'Gemma 3 4B', desc: 'Fast & smart - Google' },
-  { id: 'google/gemma-3-12b-it', name: 'Gemma 3 12B', desc: 'More power - Google' },
-  { id: 'google/gemma-3n-4b-it', name: 'Gemma 3n 4B', desc: 'Mobile optimized' },
-  { id: 'google/gemma-3n-2b-it', name: 'Gemma 3n 2B', desc: 'Lightweight' },
-  { id: 'nousresearch/hermes-3-405b-instruct', name: 'Hermes 3 405B', desc: 'Most powerful (slow)' },
+  // Qwen
+  { id: 'qwen/qwen3-next-80b-a3b-instruct:free', name: 'Qwen 3 80B', desc: '⚡ Ultra Fast' },
+  { id: 'qwen/qwen3-coder:free', name: 'Qwen Coder', desc: '💻 Best for Code' },
+  { id: 'qwen/qwen3-4b:free', name: 'Qwen 3 4B', desc: '🪶 Lightweight' },
+  { id: 'qwen/qwen3-vl-30b-a3b-thinking:free', name: 'Qwen VL 30B', desc: '🖼️ Vision + Think' },
+  { id: 'qwen/qwen3-vl-235b-a22b-thinking:free', name: 'Qwen VL 235B', desc: '🔥 Most Powerful' },
+  
+  // StepFun
+  { id: 'stepfun/step-3.5-flash:free', name: 'Step 3.5 Flash', desc: '⚡ Fast' },
+  
+  // NVIDIA
+  { id: 'nvidia/nemotron-3-nano-30b-a3b:free', name: 'Nemotron 3 30B', desc: '💪 Strong' },
+  { id: 'nvidia/nemotron-nano-12b-v2-vl:free', name: 'Nemotron Nano 12B VL', desc: '🖼️ Vision' },
+  { id: 'nvidia/nemotron-nano-9b-v2:free', name: 'Nemotron Nano 9B', desc: '📱 Efficient' },
+  
+  // Google
+  { id: 'google/gemma-3-27b-it:free', name: 'Gemma 3 27B', desc: '🔥 Top Performance' },
+  { id: 'google/gemma-3-4b-it:free', name: 'Gemma 3 4B', desc: '⚡ Fast & Smart' },
+  { id: 'google/gemma-3-12b-it:free', name: 'Gemma 3 12B', desc: '💪 More Power' },
+  { id: 'google/gemma-3n-e2b-it:free', name: 'Gemma 3n E2B', desc: '🪶 Lightweight' },
+  { id: 'google/gemma-3n-e4b-it:free', name: 'Gemma 3n E4B', desc: '📱 Mobile' },
+  
+  // Meta
+  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 70B', desc: '🔥 Very Strong' },
+  { id: 'meta-llama/llama-3.2-3b-instruct:free', name: 'Llama 3.2 3B', desc: '🪶 Lightweight' },
+  
+  // Mistral
+  { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral 3.1 24B', desc: '💪 Balanced' },
+  
+  // Nous
+  { id: 'nousresearch/hermes-3-llama-3.1-405b:free', name: 'Hermes 3 405B', desc: '🔥 Top Tier' },
+  
+  // Arcee
+  { id: 'arcee-ai/trinity-mini:free', name: 'Trinity Mini', desc: '🪶 Tiny' },
+  { id: 'arcee-ai/trinity-large-preview:free', name: 'Trinity Large', desc: '💪 Strong' },
+  
+  // OpenRouter
+  { id: 'openrouter/free', name: 'OpenRouter Auto', desc: '🤖 Best Free Model' },
+  
+  // OpenAI
+  { id: 'openai/gpt-oss-120b:free', name: 'GPT OSS 120B', desc: '💪 Large' },
+  { id: 'openai/gpt-oss-20b:free', name: 'GPT OSS 20B', desc: '🪶 Compact' },
+  
+  // Z-ai
+  { id: 'z-ai/glm-4.5-air:free', name: 'GLM 4.5 Air', desc: '⚡ Fast' },
+  
+  // Liquid
+  { id: 'liquid/lfm-2.5-1.2b-thinking:free', name: 'LFM 2.5 1.2B Think', desc: '🧠 Reasoning' },
+  { id: 'liquid/lfm-2.5-1.2b-instruct:free', name: 'LFM 2.5 1.2B', desc: '🪶 Tiny' },
+  
+  // Cognitive Computations
+  { id: 'cognitivecomputations/dolphin-mistral-24b-venice-edition:free', name: 'Dolphin 24B', desc: '🐬 Great Chat' },
 ]
 
 // ==================================
@@ -58,7 +103,7 @@ function App() {
     } else {
       setMessages([{
         role: 'assistant',
-        content: `👋 Welcome to ChatNoLogin!\n\n✨ **100% Free AI Chat**\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n💬 Just start chatting!`
+        content: `👋 Welcome to ChatNoLogin!\n\n✨ **100% Free AI Chat**\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n💬 Start chatting!`
       }])
     }
   }, [sessionId])
@@ -101,20 +146,18 @@ function App() {
     setInput('')
     setLoading(true)
     
+    let reply
+    
+    // Use API - we have a working key!
     try {
-      const reply = await callAPI(newMessages, selectedModel)
-      const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
-      setMessages([...newMessages, assistantMessage])
-      saveMessages(sessionId, [...newMessages, assistantMessage])
+      reply = await callAPI(newMessages, selectedModel)
     } catch (err) {
-      const errorMsg = { 
-        role: 'assistant', 
-        content: `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`,
-        timestamp: Date.now()
-      }
-      setMessages([...newMessages, errorMsg])
-      saveMessages(sessionId, [...newMessages, errorMsg])
+      reply = `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`
     }
+    
+    const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
+    setMessages([...newMessages, assistantMessage])
+    saveMessages(sessionId, [...newMessages, assistantMessage])
     
     setLoading(false)
     inputRef.current?.focus()
