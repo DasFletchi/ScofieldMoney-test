@@ -90,7 +90,7 @@ function App() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [selectedModel, setSelectedModel] = useState(FREE_MODELS[0].id)
+  const [selectedModel, setSelectedModel] = useState('google/gemma-3-4b-it:free')
   const [showSettings, setShowSettings] = useState(false)
   const [sessionId] = useState(getSessionId)
   const messagesEndRef = useRef(null)
