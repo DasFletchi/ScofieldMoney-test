@@ -25,7 +25,8 @@ const saveMessages = (sessionId, messages) => {
 }
 
 // ============ API CONFIG ============
-const API_KEY = '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'
+// Users add their own OpenRouter API key!
+// Get free key at: https://openrouter.ai/keys
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 // ALL FREE MODELS from OpenRouter
@@ -92,6 +93,8 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [selectedModel, setSelectedModel] = useState('google/gemma-3-4b-it:free')
   const [showSettings, setShowSettings] = useState(false)
+  const [apiKeyInput, setApiKeyInput] = useState('')
+  const [hasApiKey, setHasApiKey] = useState(!!localStorage.getItem('user_api_key'))
   const [sessionId] = useState(getSessionId)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
@@ -101,9 +104,13 @@ function App() {
     if (saved && saved.length > 0) {
       setMessages(saved)
     } else {
+      const hasKey = localStorage.getItem('user_api_key')
+      setHasApiKey(!!hasKey)
       setMessages([{
         role: 'assistant',
-        content: `👋 Welcome to ChatNoLogin!\n\n✨ **100% Free AI Chat**\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n💬 Start chatting!`
+        content: hasKey 
+          ? `👋 Welcome to ChatNoLogin!\n\n✨ **AI Ready!**\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Your key stays on your device\n\n💬 Start chatting!`
+          : `👋 Welcome to ChatNoLogin!\n\n⚠️ **Add Your API Key**\n\nThis chat needs your own OpenRouter API key to work.\n\n📝 **How to:**\n1. Go to: https://openrouter.ai/keys\n2. Get a free API key\n3. Click ⚙️ and paste your key\n\n🎯 **27 Free Models** available once you add your key!\n\n🔒 Privacy First:\n• No login required\n• Your key stays on your device\n• No tracking`
       }])
     }
   }, [sessionId])
@@ -112,12 +119,12 @@ function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const callAPI = async (msgs, model) => {
+  const callAPI = async (msgs, model, apiKey) => {
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'HTTP-Referer': 'https://dasfletchi.github.io',
         'X-Title': 'ChatNoLogin'
       },
@@ -148,11 +155,17 @@ function App() {
     
     let reply
     
-    // Use API - we have a working key!
-    try {
-      reply = await callAPI(newMessages, selectedModel)
-    } catch (err) {
-      reply = `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`
+    // Check if user has API key
+    const userKey = localStorage.getItem('user_api_key')
+    if (!userKey) {
+      reply = `⚠️ No API key found!\n\nPlease add your OpenRouter API key in Settings (⚙️):\n\n1. Go to https://openrouter.ai/keys\n2. Get a free key\n3. Paste it in Settings\n\nThen start chatting! 💬`
+    } else {
+      // Use API with user's key
+      try {
+        reply = await callAPI(newMessages, selectedModel, userKey)
+      } catch (err) {
+        reply = `❌ Error: ${err.message}\n\nTry selecting a different model or check your API key!`
+      }
     }
     
     const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
@@ -168,6 +181,21 @@ function App() {
       e.preventDefault()
       sendMessage()
     }
+  }
+  
+  const saveApiKey = () => {
+    if (apiKeyInput.trim()) {
+      localStorage.setItem('user_api_key', apiKeyInput.trim())
+      setHasApiKey(true)
+      setApiKeyInput('')
+      alert('API Key saved! Refresh to use.')
+    }
+  }
+  
+  const clearApiKey = () => {
+    localStorage.removeItem('user_api_key')
+    setHasApiKey(false)
+    alert('API Key cleared!')
   }
 
   const clearChat = () => {
@@ -203,7 +231,29 @@ function App() {
       {/* Settings Panel */}
       {showSettings && (
         <div className="settings-panel">
-          <h3>⚙️ Select Free Model</h3>
+          <h3>🔑 Your OpenRouter API Key</h3>
+          <p className="api-info">
+            {hasApiKey 
+              ? '✅ API Key saved (stored in your browser)' 
+              : 'Add your own API key to use this chat. Get free key at openrouter.ai'}
+          </p>
+          {!hasApiKey && (
+            <div className="api-input-row">
+              <input
+                type="password"
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                placeholder="sk-or-v1-..."
+                className="api-input"
+              />
+              <button onClick={saveApiKey} className="btn-save">Save</button>
+            </div>
+          )}
+          {hasApiKey && (
+            <button onClick={clearApiKey} className="btn-clear">Remove Key</button>
+          )}
+          
+          <h3 style={{marginTop: '1rem'}}>🤖 Select Free Model</h3>
           <div className="model-list">
             {FREE_MODELS.map(m => (
               <button

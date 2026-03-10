@@ -161,6 +161,48 @@ body {
   color: var(--accent);
 }
 
+/* API Key Input */
+.api-info {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.api-input-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.api-input {
+  flex: 1;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.api-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.btn-save, .btn-clear {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-clear {
+  background: #f85149;
+}
+
 /* Messages */
 .messages {
   flex: 1;
