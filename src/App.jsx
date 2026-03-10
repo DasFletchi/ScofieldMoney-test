@@ -25,27 +25,16 @@ const saveMessages = (sessionId, messages) => {
 }
 
 // ============ API CONFIG ============
-// OpenRouter API - free models, $0.01 spending limit recommended
 const API_KEY = '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'
-const USE_PROXY = false
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-// Demo responses when no API key is provided
-const DEMO_RESPONSES = [
-  "Hey! 👋 Add your OpenRouter API key to enable real AI! Check the README for instructions.",
-  "This is demo mode. For real AI responses, add your free OpenRouter API key!",
-  "Cool question! Get your free key at openrouter.ai to unlock full AI power 🚀",
-  "Demo active! Want real AI? Add your API key - it's free!",
-  "🤖 Want real AI? Add your API key. Check GitHub repo for guide!"
-]
-
-// FREE MODELS ONLY - No paid models!
+// FREE MODELS - all $0 on OpenRouter
 const FREE_MODELS = [
-  { id: 'google/gemma-3-4b-it', name: 'Gemma 3 4B', desc: 'Fast & smart - Google' },
-  { id: 'google/gemma-3-12b-it', name: 'Gemma 3 12B', desc: 'More power - Google' },
-  { id: 'google/gemma-3n-4b-it', name: 'Gemma 3n 4B', desc: 'Mobile optimized' },
-  { id: 'google/gemma-3n-2b-it', name: 'Gemma 3n 2B', desc: 'Lightweight' },
-  { id: 'nousresearch/hermes-3-405b-instruct', name: 'Hermes 3 405B', desc: 'Most powerful (slow)' },
+  { id: 'google/gemma-3-4b-it', name: 'Gemma 3 4B', desc: '⚡ Fast & Smart - Google' },
+  { id: 'google/gemma-3-12b-it', name: 'Gemma 3 12B', desc: '💪 More Power - Google' },
+  { id: 'google/gemma-3n-4b-it', name: 'Gemma 3n 4B', desc: '📱 Mobile Optimized' },
+  { id: 'google/gemma-3n-2b-it', name: 'Gemma 3n 2B', desc: '🪶 Lightweight' },
+  { id: 'nousresearch/hermes-3-405b-instruct', name: 'Hermes 3 405B', desc: '🔥 Most Powerful' },
 ]
 
 // ==================================
@@ -65,11 +54,9 @@ function App() {
     if (saved && saved.length > 0) {
       setMessages(saved)
     } else {
-      const hasAI = API_KEY || USE_PROXY
-      const status = hasAI ? '✨ AI Ready' : '⚠️ Demo Mode'
       setMessages([{
         role: 'assistant',
-        content: `👋 Welcome to ChatNoLogin!\n\n${status}\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n${hasAI ? '💬 Start chatting!' : '💡 Add your own API key in .env to enable real AI!\n\nOr deploy the included Cloudflare Worker for free proxy.'}\n\nGet free key: openrouter.ai`
+        content: `👋 Welcome to ChatNoLogin!\n\n✨ **100% Free AI Chat**\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n💬 Start chatting!`
       }])
     }
   }, [sessionId])
@@ -79,22 +66,14 @@ function App() {
   }, [messages])
 
   const callAPI = async (msgs, model) => {
-    const headers = {
-      'Content-Type': 'application/json',
-    }
-    
-    let url = API_URL
-    if (USE_PROXY) {
-      // Use proxy - no auth needed (key is server-side)
-      // Proxy forwards to OpenRouter
-    } else {
-      // Direct call with own key
-      headers['Authorization'] = `Bearer ${API_KEY}`
-    }
-    
-    const response = await fetch(url, {
+    const response = await fetch(API_URL, {
       method: 'POST',
-      headers: headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`,
+        'HTTP-Referer': 'https://dasfletchi.github.io',
+        'X-Title': 'ChatNoLogin'
+      },
       body: JSON.stringify({
         model: model,
         messages: msgs.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content })),
@@ -122,17 +101,11 @@ function App() {
     
     let reply
     
-    // Use API if key OR proxy is available
-    if (API_KEY || USE_PROXY) {
-      try {
-        reply = await callAPI(newMessages, selectedModel)
-      } catch (err) {
-        reply = `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`
-      }
-    } else {
-      // Demo mode - no API
-      await new Promise(r => setTimeout(r, 500 + Math.random() * 500))
-      reply = DEMO_RESPONSES[Math.floor(Math.random() * DEMO_RESPONSES.length)]
+    // Use API - we have a working key!
+    try {
+      reply = await callAPI(newMessages, selectedModel)
+    } catch (err) {
+      reply = `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`
     }
     
     const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
