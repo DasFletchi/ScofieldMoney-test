@@ -30,6 +30,15 @@ const saveMessages = (sessionId, messages) => {
 const API_KEY = import.meta.env.VITE_API_KEY || ''
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
+// Demo responses when no API key is provided
+const DEMO_RESPONSES = [
+  "Hey! 👋 Add your OpenRouter API key to enable real AI! Check the README for instructions.",
+  "This is demo mode. For real AI responses, add your free OpenRouter API key!",
+  "Cool question! Get your free key at openrouter.ai to unlock full AI power 🚀",
+  "Demo active! Want real AI? Add your API key - it's free!",
+  "🤖 Want real AI? Add your API key. Check GitHub repo for guide!"
+]
+
 // FREE MODELS ONLY - No paid models!
 const FREE_MODELS = [
   { id: 'google/gemma-3-4b-it', name: 'Gemma 3 4B', desc: 'Fast & smart - Google' },
@@ -56,9 +65,10 @@ function App() {
     if (saved && saved.length > 0) {
       setMessages(saved)
     } else {
+      const apiStatus = API_KEY ? '✨ AI Ready' : '⚠️ Demo Mode'
       setMessages([{
         role: 'assistant',
-        content: `👋 Welcome to ChatNoLogin!\n\n✨ **100% Free AI Chat**\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n💬 Just start chatting!`
+        content: `👋 Welcome to ChatNoLogin!\n\n${apiStatus}\n\n🎯 Select a model in settings (⚙️):\n${FREE_MODELS.map(m => `• ${m.name}: ${m.desc}`).join('\n')}\n\n🔒 Privacy First:\n• No login required\n• No tracking\n• No ads\n• Open source\n\n${API_KEY ? '💬 Start chatting!' : '💡 Add your API key to enable real AI!'}\n\nGet free key: openrouter.ai`
       }])
     }
   }, [sessionId])
@@ -101,20 +111,23 @@ function App() {
     setInput('')
     setLoading(true)
     
-    try {
-      const reply = await callAPI(newMessages, selectedModel)
-      const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
-      setMessages([...newMessages, assistantMessage])
-      saveMessages(sessionId, [...newMessages, assistantMessage])
-    } catch (err) {
-      const errorMsg = { 
-        role: 'assistant', 
-        content: `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`,
-        timestamp: Date.now()
+    let reply
+    
+    // If no API key, use demo mode
+    if (!API_KEY) {
+      await new Promise(r => setTimeout(r, 500 + Math.random() * 500))
+      reply = DEMO_RESPONSES[Math.floor(Math.random() * DEMO_RESPONSES.length)]
+    } else {
+      try {
+        reply = await callAPI(newMessages, selectedModel)
+      } catch (err) {
+        reply = `❌ Error: ${err.message}\n\nTry selecting a different model in settings!`
       }
-      setMessages([...newMessages, errorMsg])
-      saveMessages(sessionId, [...newMessages, errorMsg])
     }
+    
+    const assistantMessage = { role: 'assistant', content: reply, timestamp: Date.now() }
+    setMessages([...newMessages, assistantMessage])
+    saveMessages(sessionId, [...newMessages, assistantMessage])
     
     setLoading(false)
     inputRef.current?.focus()
