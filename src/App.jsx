@@ -25,14 +25,10 @@ const saveMessages = (sessionId, messages) => {
 }
 
 // ============ API CONFIG ============
-// Free proxy URL (hides API key server-side)
-// Default: uses public proxy. Replace with your own Cloudflare Worker for production.
-const PROXY_URL = 'https://ai-proxy.example.workers.dev' // TODO: Deploy your own
-const API_URL = PROXY_URL || 'https://openrouter.ai/api/v1/chat/completions'
-
-// For self-hosting with your own key, set VITE_OPENROUTER_KEY in .env
-const API_KEY = import.meta.env.VITE_OPENROUTER_KEY || ''
-const USE_PROXY = !API_KEY  // Use proxy if no own key
+// OpenRouter API - free models, $0.01 spending limit recommended
+const API_KEY = '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'
+const USE_PROXY = false
+const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 // Demo responses when no API key is provided
 const DEMO_RESPONSES = [

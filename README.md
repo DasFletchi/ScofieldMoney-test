@@ -1,6 +1,6 @@
-# 🤖 ChatNoLogin - 100% Free AI Chat
+# 🤖 ChatNoLogin - Free AI Chat
 
-**No login. No tracking. No ads. Completely free.**
+**No login. No tracking. 100% Free.**
 
 ---
 
@@ -8,13 +8,11 @@
 
 **https://dasfletchi.github.io/NoLoginChat/**
 
-*(Powered by free Cloudflare Worker proxy)*
-
 ---
 
 ## ✨ Features
 
-- ✅ **100% Free** - No paid models, no user API key needed
+- ✅ **100% Free** - Powered by OpenRouter (free models)
 - 🔒 **Privacy First** - No tracking, no login
 - 📱 **Mobile Ready** - Works on phone & desktop
 - 🤖 **5 Free Models** - Choose your AI:
@@ -26,29 +24,13 @@
 
 ---
 
-## 🔐 How It Works (API Key Hidden!)
+## 💰 Funding
 
-The API key is stored in a **Cloudflare Worker** (server-side), so:
-- ✅ Users don't see the API key
-- ✅ Key cannot be leaked/stolen
-- ✅ Completely free to run (Cloudflare Workers free tier)
+This service is free but not costless. Help us stay alive:
 
-### Deploy Your Own Proxy (optional)
-
-If you want to run your own:
-
-1. Go to: https://workers.cloudflare.com
-2. Create new worker
-3. Paste code from `worker.js`
-4. Add your OpenRouter key in the worker code
-5. Update `src/App.jsx` with your worker URL
-
----
-
-## 🌿 This Project is Open
-
-- **Open source** - Host yourself
-- **Privacy focused** - Your data stays yours
+- ☕️ [Buy us a coffee](https://ko-fi.com/)
+- ⭐ Star the repo
+- 📢 Share with friends
 
 ---
 
@@ -61,13 +43,23 @@ npm install
 npm run dev
 ```
 
+### Add your own API key
+
+Edit `src/App.jsx` and replace the API key:
+
+```javascript
+const API_KEY = 'your-key-here'
+```
+
+Get free key at: https://openrouter.ai
+
 ---
 
-## 💚 Support
+## ⚙️ Tech Stack
 
-- ⭐ Star the repo
-- 🐛 Report bugs
-- 💡 Suggest features
+- React + Vite
+- OpenRouter API (free models)
+- GitHub Pages
 
 ---
 
