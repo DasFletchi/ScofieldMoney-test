@@ -1,8 +1,8 @@
-# 🤖 ChatNoLogin
+# 🤖 ChatNoLogin - Privacy First
 
-**Free AI Chat - No Login Required**
+**Free AI Chat - NO ADS, No Tracking, No Login**
 
-A minimalist AI chatbot that works without signup. Just open and chat!
+A minimal, privacy-focused AI chatbot. No ads, no tracking, no nonsense.
 
 ---
 
@@ -10,95 +10,59 @@ A minimalist AI chatbot that works without signup. Just open and chat!
 
 **https://dasfletchi.github.io/NoLoginChat/**
 
+*(This branch = NO ads. For ad-supported version, see `ads-enabled` branch)*
+
 ---
 
 ## ✨ Features
 
-- **No Login Required** - Just open and start chatting
-- **Session-Based** - Your chat is saved in your URL (shareable)
-- **Privacy First** - No tracking, no accounts, no data collection
-- **Mobile Ready** - Works great on phone and desktop
-- **Dark Theme** - Easy on the eyes
-- **Code Highlighting** - Copy code blocks with one click
+- **No Login** - Just open and start chatting
+- **No Ads** - Clean, distraction-free interface  
+- **Privacy First** - No tracking, no cookies, no data collection
+- **Session-Based** - Your chat lives in your URL (shareable)
+- **Mobile Ready** - Works great on phone & desktop
 
 ---
 
-## 🔧 Setup AI (Optional)
+## 🌿 Branches
 
-The app works in **Demo Mode** by default. To enable real AI:
-
-1. Edit `src/App.jsx`
-2. Add your API key:
-
-```javascript
-const API_KEY = 'your-key-here'
-const MODEL = 'meta-llama/llama-3.1-8b-instruct'
-const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
-```
-
-3. Redeploy!
-
-### Free APIs to Use:
-- **OpenRouter** (recommended) - openrouter.ai
-- **OpenAI** - platform.openai.com  
-- **Anthropic** - anthropic.com
-- **Groq** - groq.com
+| Branch | Description |
+|--------|-------------|
+| `main` | Privacy First - No Ads ✅ |
+| `ads-enabled` | Ad-supported (helps fund the service) |
 
 ---
 
-## 🛠️ Tech Stack
-
-| Component | Technology |
-|-----------|------------|
-| Frontend | React + Vite |
-| Styling | Custom CSS |
-| Hosting | GitHub Pages |
-| Storage | localStorage (browser) |
-
----
-
-## 📱 Usage
-
-1. Open the URL
-2. Start typing
-3. Share the URL to save/share your chat
-
----
-
-## 📄 Files
-
-```
-├── src/
-│   ├── App.jsx       # Main chat component
-│   ├── index.css      # Styling
-│   └── main.jsx      # Entry point
-├── index.html        # HTML template
-├── package.json      # Dependencies
-└── vite.config.js   # Build config
-```
-
----
-
-## 🚀 Deploy
+## 🔧 Setup
 
 ```bash
-# Install deps
+git clone https://github.com/DasFletchi/NoLoginChat.git
+cd NoLoginChat
 npm install
-
-# Build
-npm run build
-
-# Deploy to GitHub Pages
-# Just push to main branch!
+npm run dev
 ```
 
 ---
 
-## 📊 Marketing
+## 🤖 AI Configuration
 
-- **SEO Keywords**: `seo_keywords.csv`
-- **Social Posts**: `social_posts/drafts.md`
-- **Ad Copy**: `ads/copy.md`
+Want real AI responses? Edit `src/App.jsx`:
+
+```javascript
+const USE_REAL_API = true
+const API_KEY = 'your-api-key-here'
+```
+
+### Free API Options:
+- OpenRouter (recommended)
+- Groq
+- Anthropic
+
+---
+
+## 📄 License
+
+MIT - Do whatever you want!
 
 ---
 
